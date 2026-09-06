@@ -53,7 +53,7 @@ router.post(
             res.status(201).json({ user: newUser, token });
         } catch (err) {
             console.error('Register error:', err);
-            res.status(500).json({ error: 'Server error during registration.' });
+            res.status(500).json({ error: err.message || 'Server error during registration.' });
         }
     }
 );
@@ -88,7 +88,7 @@ router.post(
             res.json({ user: safeUser, token });
         } catch (err) {
             console.error('Login error:', err);
-            res.status(500).json({ error: 'Server error during login.' });
+            res.status(500).json({ error: err.message || 'Server error during login.' });
         }
     }
 );

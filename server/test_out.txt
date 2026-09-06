@@ -1,0 +1,13 @@
+◇ injected env (4) from .env // tip: ⌘ suppress logs { quiet: true }
+Select Error: {
+  code: '42501',
+  details: null,
+  hint: 'Grant the required privileges to the current role with: GRANT SELECT ON public.users TO service_role;',
+  message: 'permission denied for table users'
+}
+Insert Error: {
+  code: '42501',
+  details: null,
+  hint: 'Grant the required privileges to the current role with: GRANT INSERT ON public.users TO service_role;',
+  message: 'permission denied for table users'
+}
