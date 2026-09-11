@@ -1,3 +1,7 @@
+// Force IPv4 DNS resolution — Render free tier blocks all outbound IPv6 (ENETUNREACH on 2607::/16)
+// This must be the very first line, before any module that does DNS lookups (e.g. nodemailer).
+require('dns').setDefaultResultOrder('ipv4first');
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
