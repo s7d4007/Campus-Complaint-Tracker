@@ -165,4 +165,28 @@ router.get('/me', auth, async (req, res) => {
     }
 });
 
+// PATCH /api/auth/profile
+router.patch('/profile', auth, [
+    body('name').trim().notEmpty().withMessage('Name cannot be empty'),
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    const { name } = req.body;
+    try {
+        const { data: updated, error } = await supabase
+            .from('users')
+            .update({ name })
+            .eq('id', req.user.id)
+            .select('id, name, email, role, created_at')
+            .single();
+
+        if (error) throw error;
+        res.json({ user: updated });
+    } catch (err) {
+        console.error('Profile update error:', err);
+        res.status(500).json({ error: 'Failed to update profile.' });
+    }
+});
+
 module.exports = router;

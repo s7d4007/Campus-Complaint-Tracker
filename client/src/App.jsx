@@ -12,6 +12,7 @@ import ComplaintHistory from './pages/ComplaintHistory';
 import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminComplaints from './pages/AdminComplaints';
+import Settings from './pages/Settings';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { user, loading } = useAuth();
@@ -40,6 +41,7 @@ export default function App() {
                 {/* Protected - Both */}
                 <Route path="/complaints/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
                 {/* Protected - Student */}
                 <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['student']}><StudentDashboard /></ProtectedRoute>} />

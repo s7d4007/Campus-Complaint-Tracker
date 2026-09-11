@@ -28,8 +28,8 @@ export default function Navbar() {
             to={to}
             onClick={() => setMenuOpen(false)}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname === to
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                ? 'bg-primary-600 text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800'
                 }`}
         >
             <Icon size={16} /> {label}
@@ -73,12 +73,18 @@ export default function Navbar() {
                             </span>
                         )}
                     </Link>
-                    <div className="hidden md:flex items-center gap-2 pl-2 border-l border-gray-800">
+                    <Link
+                        to="/settings"
+                        className="hidden md:flex items-center gap-2 pl-2 border-l border-gray-800 hover:opacity-80 transition-opacity"
+                    >
                         <div className="w-7 h-7 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold">
                             {user.name?.[0]?.toUpperCase()}
                         </div>
                         <span className="text-sm text-gray-300 hidden lg:block">{user.name}</span>
-                    </div>
+                    </Link>
+                    <Link to="/settings" className="hidden md:flex p-2 text-gray-400 hover:text-white transition-colors" title="Settings">
+                        <FiSettings size={18} />
+                    </Link>
                     <button onClick={handleLogout} className="hidden md:flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors ml-1">
                         <FiLogOut size={16} />
                     </button>
@@ -104,6 +110,7 @@ export default function Navbar() {
                         </>
                     )}
                     {navLink('/notifications', 'Notifications', FiBell)}
+                    {navLink('/settings', 'Settings', FiSettings)}
                     <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 text-red-400 text-sm font-medium">
                         <FiLogOut size={16} /> Logout
                     </button>

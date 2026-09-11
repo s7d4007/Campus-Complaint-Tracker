@@ -8,53 +8,265 @@
   * {
     box-sizing: border-box;
   }
+
   body {
     @apply bg-gray-950 text-gray-100 font-sans antialiased;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html:not(.dark) body {
+    @apply bg-slate-50 text-slate-800;
+  }
+
+  /* ── Light-mode text remaps ─────────────────────────────────────────────────
+   * The app hard-codes Tailwind utility classes like text-white, text-gray-300
+   * throughout every component. The body colour alone can't beat them (equal
+   * specificity). Using html:not(.dark) gives us one extra pseudo-class point
+   * so we win without !important.
+   * ──────────────────────────────────────────────────────────────────────── */
+  html:not(.dark) .text-white {
+    color: #1e293b;
+  }
+
+  html:not(.dark) .text-gray-50 {
+    color: #1e293b;
+  }
+
+  html:not(.dark) .text-gray-100 {
+    color: #334155;
+  }
+
+  html:not(.dark) .text-gray-200 {
+    color: #475569;
+  }
+
+  html:not(.dark) .text-gray-300 {
+    color: #64748b;
+  }
+
+  html:not(.dark) .text-gray-400 {
+    color: #94a3b8;
+  }
+
+  html:not(.dark) .text-gray-500 {
+    color: #94a3b8;
+  }
+
+  html:not(.dark) .text-gray-600 {
+    color: #64748b;
+  }
+
+  /*
+   * EXCEPTIONS — elements that sit on a coloured background must keep
+   * white text. Compound selectors (two classes) beat single-class selectors,
+   * so these win over html:not(.dark) .text-white above.
+   *
+   * Case A: the element ITSELF has both a colour-bg class AND text-white.
+   * Case B: the element is INSIDE a coloured container (parent has bg-*).
+   */
+  html:not(.dark) .bg-primary-600.text-white,
+  html:not(.dark) .bg-primary-500.text-white,
+  html:not(.dark) .bg-blue-500.text-white,
+  html:not(.dark) .bg-blue-600.text-white,
+  html:not(.dark) .bg-green-500.text-white,
+  html:not(.dark) .bg-green-600.text-white,
+  html:not(.dark) .bg-yellow-500.text-white,
+  html:not(.dark) .bg-yellow-600.text-white,
+  html:not(.dark) .bg-red-500.text-white,
+  html:not(.dark) .bg-red-600.text-white,
+  html:not(.dark) .bg-gray-700.text-white,
+  html:not(.dark) .bg-gray-800.text-white {
+    color: #ffffff;
+  }
+
+  html:not(.dark) .bg-primary-600 .text-white,
+  html:not(.dark) .bg-primary-500 .text-white,
+  html:not(.dark) .bg-blue-600 .text-white,
+  html:not(.dark) .bg-green-600 .text-white,
+  html:not(.dark) .bg-yellow-600 .text-white,
+  html:not(.dark) .bg-red-600 .text-white,
+  html:not(.dark) .bg-gray-700 .text-white {
+    color: #ffffff;
+  }
+
+  /* ── Light-mode background remaps ──────────────────────────────────────── */
+  html:not(.dark) .bg-gray-950 {
+    background-color: #f8fafc;
+  }
+
+  html:not(.dark) .bg-gray-900 {
+    background-color: #ffffff;
+  }
+
+  html:not(.dark) .bg-gray-800 {
+    background-color: #f1f5f9;
+  }
+
+  /* ── Light-mode border remaps ───────────────────────────────────────────── */
+  html:not(.dark) .border-gray-800 {
+    border-color: #e2e8f0;
+  }
+
+  html:not(.dark) .border-gray-700 {
+    border-color: #cbd5e1;
+  }
+
+  /* ── Hover fixes ────────────────────────────────────────────────────────────
+   * hover:bg-gray-800 and hover:bg-gray-700 are dark greys — hideous on a
+   * light background. Remap them to soft slate shades.
+   */
+  html:not(.dark) .hover\:bg-gray-800:hover {
+    background-color: #e2e8f0;
+  }
+
+  html:not(.dark) .hover\:bg-gray-700:hover {
+    background-color: #f1f5f9;
+  }
+
+  html:not(.dark) .hover\:text-white:hover {
+    color: #1e293b;
+  }
+
+  /* Nav backdrop blur override */
+  html:not(.dark) .bg-gray-950\/80 {
+    background-color: rgba(248, 250, 252, 0.9) !important;
   }
 }
 
 @layer components {
+
+  /* ── Buttons ─────────────────────────────────────────────────────────────── */
   .btn-primary {
     @apply bg-primary-600 hover:bg-primary-500 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
+  /* Force white text on primary button in both modes — btn-primary gets its
+     colour from this rule, not from a text-white class, so the global remap
+     doesn't affect it. Belt-and-suspenders: make it explicit. */
+  html:not(.dark) .btn-primary {
+    color: #ffffff;
+  }
+
   .btn-secondary {
     @apply bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 active:scale-95;
   }
+
+  html:not(.dark) .btn-secondary {
+    @apply bg-slate-200 hover:bg-slate-300 text-slate-700;
+  }
+
   .btn-danger {
     @apply bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 active:scale-95;
   }
-  .card {
-    @apply bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl;
+
+  html:not(.dark) .btn-danger {
+    color: #ffffff;
   }
+
+  /* ── Card ────────────────────────────────────────────────────────────────── */
+  .card {
+    @apply bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl transition-colors duration-300;
+  }
+
+  html:not(.dark) .card {
+    @apply bg-white border-slate-200 shadow-sm;
+  }
+
+  /* ── Input ───────────────────────────────────────────────────────────────── */
   .input {
     @apply w-full bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
   }
+
+  html:not(.dark) .input {
+    @apply bg-white border-slate-300 text-slate-800 placeholder-slate-400;
+  }
+
+  /* ── Label ───────────────────────────────────────────────────────────────── */
   .label {
     @apply block text-sm font-medium text-gray-400 mb-1.5;
   }
-  .badge-open        { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30; }
-  .badge-in_progress { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30; }
-  .badge-resolved    { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30; }
-  .badge-rejected    { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-400 border border-red-500/30; }
 
-  .priority-low    { @apply text-gray-400; }
-  .priority-medium { @apply text-blue-400; }
-  .priority-high   { @apply text-orange-400; }
-  .priority-urgent { @apply text-red-400; }
+  html:not(.dark) .label {
+    @apply text-slate-600;
+  }
+
+  /* ── Status badges ───────────────────────────────────────────────────────── */
+  .badge-open {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-500 border border-blue-500/30;
+  }
+
+  .badge-in_progress {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-500 border border-amber-500/30;
+  }
+
+  .badge-resolved {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-500/20 text-green-500 border border-green-500/30;
+  }
+
+  .badge-rejected {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-500 border border-red-500/30;
+  }
+
+  /* ── Priority ────────────────────────────────────────────────────────────── */
+  .priority-low {
+    @apply text-slate-400;
+  }
+
+  .priority-medium {
+    @apply text-blue-500;
+  }
+
+  .priority-high {
+    @apply text-orange-500;
+  }
+
+  .priority-urgent {
+    @apply text-red-500;
+  }
 }
 
 @layer utilities {
   .glass {
     @apply bg-white/5 backdrop-blur-md border border-white/10;
   }
+
+  html:not(.dark) .glass {
+    @apply bg-black/5 border-black/10;
+  }
+
   .gradient-text {
     @apply bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent;
   }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #111827; }
-::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #4B5563; }
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
