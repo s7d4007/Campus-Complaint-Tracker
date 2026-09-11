@@ -9,14 +9,21 @@ if (!process.env.APPS_SCRIPT_URL) {
 }
 
 const sendMail = async (to, subject, html) => {
-    const res = await fetch(process.env.APPS_SCRIPT_URL, {
+    const payload = JSON.stringify({ to, subject, html });
+    const opts = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to, subject, html }),
-        redirect: 'follow', // Apps Script redirects once before responding
-    });
+        body: payload,
+    };
 
-    // Google redirects POST → GET when following, so content may come back as text
+    // Google Apps Script issues a 302 redirect on POST requests.
+    // The default redirect:'follow' converts POST → GET (HTTP spec),
+    // causing doGet() to run instead of doPost(). Fix: capture the
+    // redirect manually and re-issue as POST to the final URL.
+    const initial = await fetch(process.env.APPS_SCRIPT_URL, { ...opts, redirect: 'manual' });
+    const finalUrl = initial.headers.get('location') || process.env.APPS_SCRIPT_URL;
+    const res = await fetch(finalUrl, { ...opts, redirect: 'follow' });
+
     const text = await res.text();
     let data;
     try { data = JSON.parse(text); } catch { data = { success: false, error: text }; }
