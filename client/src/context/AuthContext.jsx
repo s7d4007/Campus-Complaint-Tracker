@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useTheme } from './ThemeContext';
 
 const AuthContext = createContext(null);
 
@@ -6,14 +7,17 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { initTheme, resetTheme } = useTheme();
 
-    // Restore session from localStorage
+    // Restore session from localStorage, and load that user's theme
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
         if (savedToken && savedUser) {
+            const userData = JSON.parse(savedUser);
             setToken(savedToken);
-            setUser(JSON.parse(savedUser));
+            setUser(userData);
+            initTheme(userData.id); // ← restore this user's theme
         }
         setLoading(false);
     }, []);
@@ -23,6 +27,7 @@ export function AuthProvider({ children }) {
         setToken(authToken);
         localStorage.setItem('token', authToken);
         localStorage.setItem('user', JSON.stringify(userData));
+        initTheme(userData.id); // ← load new user's saved theme
     };
 
     const logout = () => {
@@ -30,6 +35,7 @@ export function AuthProvider({ children }) {
         setToken(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        resetTheme(); // ← back to system default, forget user
     };
 
     const updateUser = (updated) => {

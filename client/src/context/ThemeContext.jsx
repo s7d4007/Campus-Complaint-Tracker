@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const ThemeContext = createContext(null);
 
@@ -9,7 +9,7 @@ const applyTheme = (theme) => {
     } else if (theme === 'light') {
         root.classList.remove('dark');
     } else {
-        // system
+        // system — follow OS preference
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (prefersDark) root.classList.add('dark');
         else root.classList.remove('dark');
@@ -17,15 +17,12 @@ const applyTheme = (theme) => {
 };
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'system');
+    const [theme, setThemeState] = useState('system');
+    const [userId, setUserId] = useState(null);
 
+    // Apply theme + listen for OS changes when system is selected
     useEffect(() => {
         applyTheme(theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    // When theme is 'system', listen for OS preference changes
-    useEffect(() => {
         if (theme !== 'system') return;
         const mq = window.matchMedia('(prefers-color-scheme: dark)');
         const handler = () => applyTheme('system');
@@ -33,8 +30,38 @@ export function ThemeProvider({ children }) {
         return () => mq.removeEventListener('change', handler);
     }, [theme]);
 
+    /**
+     * Called by AuthContext after login or session restore.
+     * Loads this user's saved theme preference (keyed by their ID).
+     */
+    const initTheme = useCallback((uid) => {
+        setUserId(uid);
+        const saved = localStorage.getItem(`theme_${uid}`) || 'system';
+        setThemeState(saved);
+    }, []);
+
+    /**
+     * Called by AuthContext on logout.
+     * Resets to system default and forgets the user.
+     */
+    const resetTheme = useCallback(() => {
+        setUserId(null);
+        setThemeState('system');
+    }, []);
+
+    /**
+     * Called from Settings page when user picks a theme.
+     * Saves it under their own localStorage key.
+     */
+    const setTheme = useCallback((value) => {
+        setThemeState(value);
+        if (userId) {
+            localStorage.setItem(`theme_${userId}`, value);
+        }
+    }, [userId]);
+
     return (
-        <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, setTheme, initTheme, resetTheme }}>
             {children}
         </ThemeContext.Provider>
     );
