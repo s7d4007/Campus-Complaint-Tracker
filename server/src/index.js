@@ -12,7 +12,22 @@ const commentRoutes = require('./routes/comments');
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://campus-complaint-tracker-gamma.vercel.app',
+    ...(process.env.CLIENT_URL ? [process.env.CLIENT_URL] : []),
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        callback(new Error(`CORS policy: origin ${origin} not allowed`));
+    },
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -87,7 +87,7 @@ export default function ComplaintDetail() {
                 </div>
 
                 {/* Timeline */}
-                <div className="overflow-x-auto pb-2">
+                <div className="overflow-visible py-1">
                     <StatusTimeline status={complaint.status} />
                 </div>
 

@@ -17,7 +17,7 @@ export default function StatusTimeline({ status }) {
     const currentIdx = steps.findIndex(s => s.key === status);
 
     return (
-        <div className="flex items-center gap-0">
+        <div className="flex items-center gap-0 py-2 overflow-visible">
             {steps.map((step, idx) => {
                 const isDone = idx < currentIdx || (idx === currentIdx);
                 const isCurrent = idx === currentIdx;
