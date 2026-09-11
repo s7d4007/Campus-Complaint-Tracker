@@ -13,6 +13,7 @@ import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminComplaints from './pages/AdminComplaints';
 import Settings from './pages/Settings';
+import Welcome from './pages/Welcome';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { user, loading } = useAuth();
@@ -32,7 +33,7 @@ export default function App() {
         <BrowserRouter>
             {user && <Navbar />}
             <Routes>
-                <Route path="/" element={<Navigate to={user ? (user.role === 'admin' ? '/admin' : '/dashboard') : '/login'} replace />} />
+                <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Welcome />} />
 
                 {/* Public */}
                 <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
