@@ -7,18 +7,17 @@ if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,   // true = SSL (465), false = STARTTLS (587)
+    secure: Number(process.env.SMTP_PORT) === 465,
+    family: 4, // ← Force IPv4. Render free tier blocks outbound IPv6 (ENETUNREACH on 2607::/16)
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
-    // Hard timeouts so the request fails fast instead of hanging for minutes
-    connectionTimeout: 10_000,   // 10 s to establish TCP connection
-    greetingTimeout: 5_000,    // 5 s after connect to receive SMTP greeting
-    socketTimeout: 10_000,   // 10 s of inactivity before giving up
+    connectionTimeout: 10_000,
+    greetingTimeout: 5_000,
+    socketTimeout: 10_000,
 });
 
-// Verify SMTP config on server start – prints a clear success/failure log
 transporter.verify((err) => {
     if (err) {
         console.error('❌ SMTP transporter verify failed:', err.message);
