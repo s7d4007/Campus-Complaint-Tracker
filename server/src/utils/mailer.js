@@ -37,6 +37,8 @@ const postJson = (urlStr, body, maxRedirects = 5) =>
                 timeout: 30_000,
             },
             (res) => {
+                console.log(`[mailer] status: ${res.statusCode}, location: ${res.headers.location || 'none'}`);
+
                 // Follow redirect while KEEPING POST (unlike fetch/browser behaviour)
                 if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
                     const next = new URL(res.headers.location, urlStr).toString();
