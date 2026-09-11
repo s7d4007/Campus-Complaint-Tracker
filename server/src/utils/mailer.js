@@ -39,12 +39,20 @@ const postJson = (urlStr, body, maxRedirects = 5) =>
             (res) => {
                 console.log(`[mailer] status: ${res.statusCode}, location: ${res.headers.location || 'none'}`);
 
-                // Follow redirect while KEEPING POST (unlike fetch/browser behaviour)
+                // Follow redirect using a GET request to retrieve the generated output payload
                 if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
                     const next = new URL(res.headers.location, urlStr).toString();
                     console.log(`[mailer] redirect ${res.statusCode} → ${next.slice(0, 80)}…`);
                     res.resume(); // discard body, free socket
-                    return resolve(postJson(next, body, maxRedirects - 1));
+
+                    return resolve(new Promise((resolveGet, rejectGet) => {
+                        https.get(next, (resGet) => {
+                            let text = '';
+                            resGet.setEncoding('utf8');
+                            resGet.on('data', chunk => (text += chunk));
+                            resGet.on('end', () => resolveGet(text));
+                        }).on('error', rejectGet);
+                    }));
                 }
 
                 let text = '';
