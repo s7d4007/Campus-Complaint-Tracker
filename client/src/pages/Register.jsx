@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -11,11 +11,24 @@ export default function Register() {
     const [step, setStep] = useState(1);
     const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', otp: '' });
     const [loading, setLoading] = useState(false);
+    const [slowLoad, setSlowLoad] = useState(false);
+    const slowTimer = useRef(null);
+
+    const startLoad = () => {
+        setLoading(true);
+        setSlowLoad(false);
+        slowTimer.current = setTimeout(() => setSlowLoad(true), 8000);
+    };
+    const stopLoad = () => {
+        setLoading(false);
+        setSlowLoad(false);
+        clearTimeout(slowTimer.current);
+    };
 
     const requestOTP = async (e) => {
         e.preventDefault();
         if (form.password !== form.confirm) return toast.error('Passwords do not match.');
-        setLoading(true);
+        startLoad();
         try {
             await api.post('/api/auth/send-otp', { email: form.email });
             toast.success('Verification code sent to your email!');
@@ -23,13 +36,13 @@ export default function Register() {
         } catch (err) {
             toast.error(err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Failed to send OTP.');
         } finally {
-            setLoading(false);
+            stopLoad();
         }
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        startLoad();
         try {
             const { data } = await api.post('/api/auth/register', {
                 name: form.name, email: form.email, password: form.password, otp: form.otp
@@ -40,7 +53,7 @@ export default function Register() {
         } catch (err) {
             toast.error(err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Registration failed.');
         } finally {
-            setLoading(false);
+            stopLoad();
         }
     };
 
@@ -82,8 +95,16 @@ export default function Register() {
                             {field('password', 'password', 'Password', 'Min. 6 characters', FiLock)}
                             {field('confirm', 'password', 'Confirm Password', '••••••••', FiLock)}
                             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 mt-2">
-                                {loading ? 'Sending Code…' : 'Continue'}
+                                {loading ? (
+                                    <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                                        {slowLoad ? 'Server waking up…' : 'Sending Code…'}</>
+                                ) : 'Continue'}
                             </button>
+                            {slowLoad && (
+                                <p className="text-xs text-amber-400/80 text-center mt-2">
+                                    ⏳ Server is starting up — hang tight, almost there!
+                                </p>
+                            )}
                         </form>
                     ) : (
                         <form onSubmit={handleRegister} className="space-y-4">

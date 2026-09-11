@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
+import api from './api/axios';
 
 // Pages
 import Login from './pages/Login';
@@ -28,6 +30,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 export default function App() {
     const { user } = useAuth();
+
+    // Silently wake up Render's free-tier instance on app load.
+    // By the time the user fills in the form, the server is already warm.
+    useEffect(() => {
+        api.get('/health').catch(() => { }); // fire-and-forget, ignore errors
+    }, []);
 
     return (
         <BrowserRouter>
