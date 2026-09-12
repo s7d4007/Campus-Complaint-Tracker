@@ -8,11 +8,23 @@ if (!process.env.APPS_SCRIPT_URL) {
     console.log('✅ Mailer ready – using Google Apps Script relay (Axios)');
 }
 
-const sendMail = async (to, subject, html) => {
+/**
+ * Send an email via the Apps Script relay.
+ * @param {string} to       - recipient email
+ * @param {string} subject  - email subject
+ * @param {string} html     - HTML body
+ * @param {string} [text]   - plain-text fallback (improves deliverability)
+ */
+const sendMail = async (to, subject, html, text) => {
     try {
+        const payload = { to, subject, html };
+
+        // Include plain-text body if provided (helps avoid spam filters)
+        if (text) payload.text = text;
+
         const { data } = await axios.post(
             process.env.APPS_SCRIPT_URL,
-            { to, subject, html },
+            payload,
             {
                 headers: { 'Content-Type': 'application/json' },
                 timeout: 30_000 // 30s timeout

@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const supabase = require('../config/supabase');
 const auth = require('../middleware/auth');
 const { sendMail } = require('../utils/mailer');
+const { otpEmail, welcomeEmail } = require('../utils/emailTemplates');
 
 const router = express.Router();
 
@@ -35,11 +36,8 @@ router.post('/send-otp', [
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         otpStore.set(email, { code, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-        await sendMail(
-            email,
-            'Your Verification Code',
-            `<h1>Registration Verification</h1><p>Your 6-digit verification code is: <strong>${code}</strong></p><p>This code expires in 10 minutes.</p>`
-        );
+        const { html, text } = otpEmail(code);
+        await sendMail(email, 'Your CampusTracker Verification Code', html, text);
         res.json({ message: 'OTP sent successfully.' });
     } catch (err) {
         console.error('Send OTP error:', err);
@@ -90,19 +88,9 @@ router.post(
             otpStore.delete(email); // Clear the OTP once verified
 
             // Send Welcome Email asynchronously
-            sendMail(
-                email,
-                'Welcome to Campus Complaint Tracker!',
-                `<h1>Welcome, ${name}! 🎉</h1>
-                <p>Your registration was successful.</p>
-                <p>Here is what you can do next:</p>
-                <ul>
-                    <li>Submit new complaints regarding campus facilities.</li>
-                    <li>Track the real-time status of your complaints.</li>
-                    <li>Communicate directly with admins regarding your issues.</li>
-                </ul>
-                <p>Thank you for joining us.</p>`
-            ).catch(err => console.error('Welcome email error:', err));
+            const welcome = welcomeEmail(name);
+            sendMail(email, 'Welcome to CampusTracker! 🎉', welcome.html, welcome.text)
+                .catch(err => console.error('Welcome email error:', err));
 
             const token = generateToken(newUser);
             res.status(201).json({ user: newUser, token });
