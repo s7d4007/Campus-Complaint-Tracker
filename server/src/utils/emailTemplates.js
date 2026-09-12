@@ -2,15 +2,15 @@
 // Uses inline styles for maximum email client compatibility
 
 const BRAND = {
-    name: 'CampusTracker',
-    color: '#7c3aed',       // primary purple
-    colorLight: '#a78bfa',
-    bgDark: '#0f0d1a',
-    bgCard: '#1a1726',
-    textPrimary: '#f3f0ff',
-    textSecondary: '#a1a1aa',
-    border: '#2d2640',
-    year: new Date().getFullYear(),
+  name: 'CampusTracker',
+  color: '#7c3aed',       // primary purple
+  colorLight: '#a78bfa',
+  bgDark: '#0f0d1a',
+  bgCard: '#1a1726',
+  textPrimary: '#f3f0ff',
+  textSecondary: '#a1a1aa',
+  border: '#2d2640',
+  year: new Date().getFullYear(),
 };
 
 /**
@@ -83,18 +83,18 @@ const emailShell = (bodyContent) => `
 /* ── OTP Verification Email ─────────────────────────────────────── */
 
 const otpEmail = (code) => {
-    const digits = code.toString().split('');
+  const digits = code.toString().split('');
 
-    const digitBoxes = digits.map(d =>
-        `<td style="width:42px;height:50px;background-color:#0f0d1a;border:1px solid ${BRAND.border};border-radius:10px;text-align:center;vertical-align:middle;font-size:24px;font-weight:700;color:${BRAND.colorLight};letter-spacing:1px;">${d}</td>`
-    ).join(`<td style="width:6px;"></td>`);
+  const digitBoxes = digits.map(d =>
+    `<td style="width:42px;height:50px;background-color:#0f0d1a;border:1px solid ${BRAND.border};border-radius:10px;text-align:center;vertical-align:middle;font-size:24px;font-weight:700;color:${BRAND.colorLight};letter-spacing:1px;">${d}</td>`
+  ).join(`<td style="width:6px;"></td>`);
 
-    const html = emailShell(`
+  const html = emailShell(`
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:20px;">
                     <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-flex;align-items:center;justify-content:center;">
-                      <span style="font-size:28px;line-height:1;">🔐</span>
+                      <span style="font-size:24px;color:#ffffff;font-weight:700;line-height:1;letter-spacing:1px;">CC</span>
                     </div>
                   </td>
                 </tr>
@@ -137,13 +137,13 @@ const otpEmail = (code) => {
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="padding-bottom:8px;">
-                          <span style="font-size:12px;color:${BRAND.textSecondary};">⏱ </span>
+                          <span style="font-size:12px;color:${BRAND.textSecondary}; font-weight:bold;">Time: </span>
                           <span style="font-size:13px;color:${BRAND.textSecondary};">This code expires in <strong style="color:${BRAND.textPrimary};">10 minutes</strong></span>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <span style="font-size:12px;color:${BRAND.textSecondary};">🔒 </span>
+                          <span style="font-size:12px;color:${BRAND.textSecondary}; font-weight:bold;">Secure: </span>
                           <span style="font-size:13px;color:${BRAND.textSecondary};">Never share this code with anyone</span>
                         </td>
                       </tr>
@@ -162,34 +162,34 @@ const otpEmail = (code) => {
               </table>
     `);
 
-    const text = [
-        'CampusTracker — Email Verification',
-        '',
-        `Your 6-digit verification code is: ${code}`,
-        '',
-        'This code expires in 10 minutes.',
-        'Never share this code with anyone.',
-        '',
-        'If you did not request this code, please ignore this email.',
-        '',
-        `© ${BRAND.year} CampusTracker`,
-    ].join('\n');
+  const text = [
+    'CampusTracker — Email Verification',
+    '',
+    `Your 6-digit verification code is: ${code}`,
+    '',
+    'This code expires in 10 minutes.',
+    'Never share this code with anyone.',
+    '',
+    'If you did not request this code, please ignore this email.',
+    '',
+    `© ${BRAND.year} CampusTracker`,
+  ].join('\n');
 
-    return { html, text };
+  return { html, text };
 };
 
 
 /* ── Welcome Email ──────────────────────────────────────────────── */
 
 const welcomeEmail = (name) => {
-    const features = [
-        { emoji: '📝', title: 'Submit Complaints', desc: 'File campus issues with descriptions, priority levels, and photo attachments.' },
-        { emoji: '📡', title: 'Real-Time Tracking', desc: 'Watch your complaint move through Open → In Progress → Resolved.' },
-        { emoji: '🔔', title: 'Instant Notifications', desc: 'Get notified the moment your complaint status changes.' },
-        { emoji: '💬', title: 'Admin Communication', desc: 'Communicate directly with administrators regarding your issues.' },
-    ];
+  const features = [
+    { emoji: '•', title: 'Submit Complaints', desc: 'File campus issues with descriptions, priority levels, and photo attachments.' },
+    { emoji: '•', title: 'Real-Time Tracking', desc: 'Watch your complaint move through Open → In Progress → Resolved.' },
+    { emoji: '•', title: 'Instant Notifications', desc: 'Get notified the moment your complaint status changes.' },
+    { emoji: '•', title: 'Admin Communication', desc: 'Communicate directly with administrators regarding your issues.' },
+  ];
 
-    const featureRows = features.map(f => `
+  const featureRows = features.map(f => `
                       <tr>
                         <td style="padding:12px 16px;background-color:#0f0d1a;border:1px solid ${BRAND.border};border-radius:12px;">
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -206,11 +206,13 @@ const welcomeEmail = (name) => {
                       <tr><td style="height:8px;"></td></tr>
     `).join('');
 
-    const html = emailShell(`
+  const html = emailShell(`
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:20px;">
-                    <div style="font-size:48px;line-height:1;">🎉</div>
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-flex;align-items:center;justify-content:center;">
+                      <span style="font-size:24px;color:#ffffff;font-weight:700;line-height:1;letter-spacing:1px;">CC</span>
+                    </div>
                   </td>
                 </tr>
                 <tr>
@@ -264,23 +266,23 @@ const welcomeEmail = (name) => {
               </table>
     `);
 
-    const text = [
-        `Welcome to CampusTracker, ${name}!`,
-        '',
-        'Your account has been created successfully.',
-        '',
-        'Here is what you can do:',
-        '• Submit campus complaints with descriptions & photos',
-        '• Track real-time status: Open → In Progress → Resolved',
-        '• Get instant notifications on status changes',
-        '• Communicate directly with administrators',
-        '',
-        'Log in: https://campus-complaint-tracker-gamma.vercel.app/login',
-        '',
-        `© ${BRAND.year} CampusTracker`,
-    ].join('\n');
+  const text = [
+    `Welcome to CampusTracker, ${name}!`,
+    '',
+    'Your account has been created successfully.',
+    '',
+    'Here is what you can do:',
+    '• Submit campus complaints with descriptions & photos',
+    '• Track real-time status: Open → In Progress → Resolved',
+    '• Get instant notifications on status changes',
+    '• Communicate directly with administrators',
+    '',
+    'Log in: https://campus-complaint-tracker-gamma.vercel.app/login',
+    '',
+    `© ${BRAND.year} CampusTracker`,
+  ].join('\n');
 
-    return { html, text };
+  return { html, text };
 };
 
 
