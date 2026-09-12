@@ -102,23 +102,23 @@ export default function Welcome() {
             </div>
 
             {/* ── Navbar ──────────────────────────────────────────── */}
-            <header className="relative z-20 flex items-center justify-between px-6 md:px-16 py-5
+            <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 md:px-16 py-4 sm:py-5
                                border-b border-white/5 backdrop-blur-md bg-gray-950/60 sticky top-0">
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center font-bold text-sm shadow-lg shadow-primary-500/40">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center font-bold text-sm shadow-lg shadow-primary-500/40 flex-shrink-0">
                         CC
                     </div>
-                    <span className="text-lg font-bold tracking-tight">
+                    <span className="text-base sm:text-lg font-bold tracking-tight truncate">
                         Campus<span className="text-primary-400">Tracker</span>
                     </span>
                 </div>
-                <nav className="flex items-center gap-3">
+                <nav className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-4">
                     <Link id="welcome-login" to="/login"
-                        className="text-sm font-medium text-gray-400 hover:text-white transition-colors px-4 py-2 rounded-xl hover:bg-white/5">
+                        className="text-xs sm:text-sm font-medium text-gray-400 hover:text-white transition-colors px-3 sm:px-4 py-2 rounded-xl hover:bg-white/5 whitespace-nowrap">
                         Sign In
                     </Link>
                     <Link id="welcome-register" to="/register"
-                        className="btn-primary text-sm py-2 px-5 flex items-center gap-1.5 shadow-lg shadow-primary-500/25">
+                        className="btn-primary text-xs sm:text-sm py-2 px-3.5 sm:px-5 flex items-center gap-1.5 shadow-lg shadow-primary-500/25 whitespace-nowrap">
                         Get Started <FiArrowRight size={14} />
                     </Link>
                 </nav>
