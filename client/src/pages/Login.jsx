@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -60,13 +61,21 @@ export default function Login() {
                             <div className="relative">
                                 <FiLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
                                 <input
-                                    type="password"
-                                    className="input pl-10"
+                                    type={showPassword ? 'text' : 'password'}
+                                    className="input pl-10 pr-10"
                                     placeholder="••••••••"
                                     value={form.password}
                                     onChange={e => setForm({ ...form, password: e.target.value })}
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                                    tabIndex="-1"
+                                >
+                                    {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                                </button>
                             </div>
                         </div>
                         <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">

@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { FiUser, FiMail, FiLock, FiUserPlus, FiKey, FiArrowLeft } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiUserPlus, FiKey, FiArrowLeft, FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Register() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', otp: '' });
+    const [showPass, setShowPass] = useState({ password: false, confirm: false });
     const [loading, setLoading] = useState(false);
     const [slowLoad, setSlowLoad] = useState(false);
     const slowTimer = useRef(null);
@@ -57,22 +58,38 @@ export default function Register() {
         }
     };
 
-    const field = (key, type, label, placeholder, Icon) => (
-        <div>
-            <label className="label">{label}</label>
-            <div className="relative">
-                <Icon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-                <input
-                    type={type}
-                    className="input pl-10"
-                    placeholder={placeholder}
-                    value={form[key]}
-                    onChange={e => setForm({ ...form, [key]: e.target.value })}
-                    required
-                />
+    const field = (key, type, label, placeholder, Icon) => {
+        const isPassword = type === 'password';
+        const show = showPass[key];
+        const inputType = isPassword ? (show ? 'text' : 'password') : type;
+
+        return (
+            <div>
+                <label className="label">{label}</label>
+                <div className="relative">
+                    <Icon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <input
+                        type={inputType}
+                        className={`input pl-10 ${isPassword ? 'pr-10' : ''}`}
+                        placeholder={placeholder}
+                        value={form[key]}
+                        onChange={e => setForm({ ...form, [key]: e.target.value })}
+                        required
+                    />
+                    {isPassword && (
+                        <button
+                            type="button"
+                            onClick={() => setShowPass(prev => ({ ...prev, [key]: !prev[key] }))}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                            tabIndex="-1"
+                        >
+                            {show ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                        </button>
+                    )}
+                </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gray-950">
