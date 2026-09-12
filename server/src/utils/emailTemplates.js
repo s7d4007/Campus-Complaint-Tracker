@@ -93,8 +93,8 @@ const otpEmail = (code) => {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:20px;">
-                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-flex;align-items:center;justify-content:center;">
-                      <span style="font-size:24px;color:#ffffff;font-weight:700;line-height:1;letter-spacing:1px;">CC</span>
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-block;text-align:center;line-height:56px;">
+                      <span style="font-size:24px;color:#ffffff;font-weight:700;">CC</span>
                     </div>
                   </td>
                 </tr>
@@ -210,8 +210,8 @@ const welcomeEmail = (name) => {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:20px;">
-                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-flex;align-items:center;justify-content:center;">
-                      <span style="font-size:24px;color:#ffffff;font-weight:700;line-height:1;letter-spacing:1px;">CC</span>
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${BRAND.color},#6366f1);display:inline-block;text-align:center;line-height:56px;">
+                      <span style="font-size:24px;color:#ffffff;font-weight:700;">CC</span>
                     </div>
                   </td>
                 </tr>

@@ -31,7 +31,9 @@ const sendMail = async (to, subject, html, text) => {
             }
         );
 
-        if (!data.success) {
+        // Apps Script returns { success: true } on direct POST,
+        // but Axios might follow a 302 redirect to a GET which returns { status: '...' }
+        if (data.success !== true && !data.status) {
             throw new Error(data.error || 'Apps Script mailer returned failure');
         }
 
