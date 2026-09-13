@@ -34,7 +34,7 @@ export default function ComplaintCard({ complaint }) {
                             {complaint.title}
                         </h3>
                     </div>
-                    <span className={statusClass}>{STATUS_LABELS[complaint.status]}</span>
+                    <span className={`${statusClass} whitespace-nowrap flex-shrink-0`}>{STATUS_LABELS[complaint.status]}</span>
                 </div>
 
                 <p className="text-gray-400 text-sm line-clamp-2 mb-4">{complaint.description}</p>

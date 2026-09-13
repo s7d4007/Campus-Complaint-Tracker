@@ -85,7 +85,7 @@ export default function AdminComplaints() {
                                     </td>
                                     <td className="py-3 px-4">
                                         <div className="flex flex-col items-start gap-1">
-                                            <span className={`badge-${c.status}`}>{c.status.replace('_', ' ')}</span>
+                                            <span className={`badge-${c.status} whitespace-nowrap flex-shrink-0`}>{c.status.replace('_', ' ')}</span>
                                             <span className={`text-xs uppercase font-medium priority-${c.priority}`}>{c.priority}</span>
                                         </div>
                                     </td>

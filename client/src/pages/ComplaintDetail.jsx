@@ -74,7 +74,7 @@ export default function ComplaintDetail() {
                         <span className="text-2xl">{CATEGORY_ICONS[complaint.category]}</span>
                         <h1 className="text-xl font-bold text-white truncate">{complaint.title}</h1>
                     </div>
-                    <span className={`badge-${complaint.status} flex-shrink-0`}>{STATUS_LABELS[complaint.status]}</span>
+                    <span className={`${`badge-${complaint.status}`} flex-shrink-0 whitespace-nowrap`}>{STATUS_LABELS[complaint.status]}</span>
                 </div>
 
                 <p className="text-gray-300 leading-relaxed mb-4">{complaint.description}</p>
