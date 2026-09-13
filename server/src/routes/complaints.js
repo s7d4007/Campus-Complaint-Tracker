@@ -65,7 +65,7 @@ router.get('/', auth, async (req, res) => {
     try {
         let query = supabase
             .from('complaints')
-            .select('*, complaint_images(public_url), users(name, email)')
+            .select('*, complaint_images(public_url), users(name, email, role)')
             .order('created_at', { ascending: false });
 
         if (req.user.role !== 'admin') {
@@ -80,7 +80,15 @@ router.get('/', auth, async (req, res) => {
         const { data, error } = await query;
         if (error) throw error;
 
-        res.json({ complaints: data });
+        const censoredData = data.map(c => {
+            if (c.users && c.users.role !== 'admin') {
+                c.users.name = 'Student';
+                c.users.email = 'hidden@example.com';
+            }
+            return c;
+        });
+
+        res.json({ complaints: censoredData });
     } catch (err) {
         console.error('Get complaints error:', err);
         res.status(500).json({ error: 'Failed to fetch complaints.' });
@@ -95,7 +103,7 @@ router.get('/:id', auth, async (req, res) => {
             .select(`
         *,
         complaint_images(id, public_url, storage_path, created_at),
-        users(id, name, email),
+        users(id, name, email, role),
         assignments(id, created_at, assigned_to_user:users!assignments_assigned_to_fkey(id, name, email)),
         comments(id, content, created_at, users(id, name, role))
       `)
@@ -107,6 +115,19 @@ router.get('/:id', auth, async (req, res) => {
         // Students can only view their own
         if (req.user.role !== 'admin' && complaint.user_id !== req.user.id) {
             return res.status(403).json({ error: 'Access denied.' });
+        }
+
+        if (complaint.users && complaint.users.role !== 'admin') {
+            complaint.users.name = 'Student';
+            complaint.users.email = 'hidden@example.com';
+        }
+
+        if (complaint.comments) {
+            complaint.comments.forEach(comment => {
+                if (comment.users && comment.users.role !== 'admin') {
+                    comment.users.name = 'Student';
+                }
+            });
         }
 
         res.json({ complaint });

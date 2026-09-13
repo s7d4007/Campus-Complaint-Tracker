@@ -15,7 +15,15 @@ router.get('/', auth, async (req, res) => {
             .order('created_at', { ascending: true });
 
         if (error) throw error;
-        res.json({ comments: data });
+
+        const censoredData = data.map(c => {
+            if (c.users && c.users.role !== 'admin') {
+                c.users.name = 'Student';
+            }
+            return c;
+        });
+
+        res.json({ comments: censoredData });
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch comments.' });
     }
@@ -42,6 +50,11 @@ router.post(
                 .single();
 
             if (error) throw error;
+
+            if (data.users && data.users.role !== 'admin') {
+                data.users.name = 'Student';
+            }
+
             res.status(201).json({ comment: data });
         } catch (err) {
             res.status(500).json({ error: 'Failed to add comment.' });

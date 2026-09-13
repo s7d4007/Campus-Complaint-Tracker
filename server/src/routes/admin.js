@@ -12,7 +12,7 @@ router.get('/complaints', auth, adminOnly, async (req, res) => {
             .from('complaints')
             .select(`
         *,
-        users(id, name, email),
+        users(id, name, email, role),
         complaint_images(public_url),
         assignments(assigned_to_user:users!assignments_assigned_to_fkey(id, name, email))
       `)
@@ -26,7 +26,15 @@ router.get('/complaints', auth, adminOnly, async (req, res) => {
         const { data, error } = await query;
         if (error) throw error;
 
-        res.json({ complaints: data });
+        const censoredData = data.map(c => {
+            if (c.users && c.users.role !== 'admin') {
+                c.users.name = 'Student';
+                c.users.email = 'hidden@example.com';
+            }
+            return c;
+        });
+
+        res.json({ complaints: censoredData });
     } catch (err) {
         console.error('Admin complaints error:', err);
         res.status(500).json({ error: 'Failed to fetch complaints.' });
