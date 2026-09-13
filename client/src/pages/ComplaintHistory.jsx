@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import ComplaintCard from '../components/ComplaintCard';
+import SkeletonCard from '../components/SkeletonCard';
 
 export default function ComplaintHistory() {
     const [complaints, setComplaints] = useState([]);
@@ -23,7 +24,7 @@ export default function ComplaintHistory() {
 
             {loading ? (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[...Array(6)].map((_, i) => <div key={i} className="card animate-pulse h-40 bg-gray-800" />)}
+                    {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
                 </div>
             ) : complaints.length === 0 ? (
                 <div className="card text-center py-12">

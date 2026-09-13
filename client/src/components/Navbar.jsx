@@ -6,6 +6,7 @@ import {
     FiBell, FiMenu, FiX, FiHome, FiPlusCircle,
     FiList, FiLogOut, FiUser, FiSettings
 } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -95,27 +96,37 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu */}
-            {menuOpen && (
-                <div className="md:hidden border-t border-gray-800 bg-gray-950 px-4 py-3 flex flex-col gap-1">
-                    {user.role === 'admin' ? (
-                        <>
-                            {navLink('/admin', 'Dashboard', FiHome)}
-                            {navLink('/admin/complaints', 'Complaints', FiList)}
-                        </>
-                    ) : (
-                        <>
-                            {navLink('/dashboard', 'Dashboard', FiHome)}
-                            {navLink('/complaints/new', 'Submit Complaint', FiPlusCircle)}
-                            {navLink('/history', 'My History', FiList)}
-                        </>
-                    )}
-                    {navLink('/notifications', 'Notifications', FiBell)}
-                    {navLink('/settings', 'Settings', FiSettings)}
-                    <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 text-red-400 text-sm font-medium">
-                        <FiLogOut size={16} /> Logout
-                    </button>
-                </div>
-            )}
+            <AnimatePresence>
+                {menuOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        className="md:hidden overflow-hidden border-t border-gray-800 bg-gray-950"
+                    >
+                        <div className="px-4 py-3 flex flex-col gap-1">
+                            {user.role === 'admin' ? (
+                                <>
+                                    {navLink('/admin', 'Dashboard', FiHome)}
+                                    {navLink('/admin/complaints', 'Complaints', FiList)}
+                                </>
+                            ) : (
+                                <>
+                                    {navLink('/dashboard', 'Dashboard', FiHome)}
+                                    {navLink('/complaints/new', 'Submit Complaint', FiPlusCircle)}
+                                    {navLink('/history', 'My History', FiList)}
+                                </>
+                            )}
+                            {navLink('/notifications', 'Notifications', FiBell)}
+                            {navLink('/settings', 'Settings', FiSettings)}
+                            <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 text-red-400 text-sm font-medium">
+                                <FiLogOut size={16} /> Logout
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
     );
 }

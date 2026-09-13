@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ComplaintCard from '../components/ComplaintCard';
+import SkeletonCard from '../components/SkeletonCard';
 import { FiPlusCircle, FiInbox, FiCheckCircle, FiClock, FiAlertTriangle } from 'react-icons/fi';
 
 const StatCard = ({ label, value, Icon, color }) => (
@@ -69,7 +70,7 @@ export default function StudentDashboard() {
             {loading ? (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className="card animate-pulse h-40 bg-gray-800" />
+                        <SkeletonCard key={i} />
                     ))}
                 </div>
             ) : recent.length === 0 ? (
