@@ -12,6 +12,7 @@
   body {
     @apply bg-gray-950 text-gray-100 font-sans antialiased;
     min-height: 100vh;
+    overflow-x: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
@@ -166,7 +167,7 @@
 
   /* ── Card ────────────────────────────────────────────────────────────────── */
   .card {
-    @apply bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl transition-colors duration-300;
+    @apply bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl transition-colors duration-300 min-w-0;
   }
 
   html:not(.dark) .card {

@@ -64,7 +64,6 @@ export default function AdminComplaints() {
                     <thead>
                         <tr className="bg-gray-800/50 text-gray-400 text-sm border-b border-gray-700 font-medium">
                             <th className="py-3 px-4">Title / Category</th>
-                            <th className="py-3 px-4">Student</th>
                             <th className="py-3 px-4">Status & Priority</th>
                             <th className="py-3 px-4">Assigned To</th>
                             <th className="py-3 px-4 text-right">Action</th>
@@ -72,16 +71,13 @@ export default function AdminComplaints() {
                     </thead>
                     <tbody className="divide-y divide-gray-800">
                         {complaints.length === 0 ? (
-                            <tr><td colSpan="5" className="py-8 text-center text-gray-500">No complaints found.</td></tr>
+                            <tr><td colSpan="4" className="py-8 text-center text-gray-500">No complaints found.</td></tr>
                         ) : (
                             complaints.map(c => (
                                 <tr key={c.id} className="hover:bg-gray-800/30 transition-colors">
                                     <td className="py-3 px-4">
                                         <p className="font-medium text-white max-w-[200px] truncate">{c.title}</p>
                                         <p className="text-xs text-gray-500 capitalize">{c.category}</p>
-                                    </td>
-                                    <td className="py-3 px-4">
-                                        <p className="text-sm text-gray-300">{c.users.name}</p>
                                     </td>
                                     <td className="py-3 px-4">
                                         <div className="flex flex-col items-start gap-1">
